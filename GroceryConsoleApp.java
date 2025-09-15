@@ -89,6 +89,7 @@ public class GroceryConsoleApp {
         addPredefinedItem("345678", "Milk", 15, 2.49);
         addPredefinedItem("456789", "Bread", 12, 1.99);
         addPredefinedItem("567890", "Eggs", 30, 3.49);
+        addPredefinedItem("567879", "Chicken", 50, 5.49);
     }
 
     private static void addPredefinedItem(String code, String name, int quantity, double price) {
@@ -96,7 +97,7 @@ public class GroceryConsoleApp {
         inventory.add(item);
         codeToItem.put(code, item);
     }
-    // ...existing code...
+    
 
     private static void addItem() {
         System.out.print("Enter item code: ");
