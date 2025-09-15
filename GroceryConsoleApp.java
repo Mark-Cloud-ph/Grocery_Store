@@ -100,7 +100,20 @@ public class GroceryConsoleApp {
         addPredefinedItem("354657", "Onion", 28, 0.59);
         addPredefinedItem("465768", "Lettuce", 20, 1.29);
         addPredefinedItem("576879", "Carrot", 30, 0.69);
-    }
+        addPredefinedItem("687980", "Grapes", 22, 2.19);
+        addPredefinedItem("798091", "Watermelon", 10, 4.99);
+        addPredefinedItem("809102", "Strawberry", 18, 3.59);
+        addPredefinedItem("910213", "Blueberry", 15, 3.99);
+        addPredefinedItem("021324", "Peach", 25, 1.79);
+        addPredefinedItem("132435", "Pear", 20, 1.49);
+        addPredefinedItem("243546", "Cucumber", 30, 0.99);
+        addPredefinedItem("354657", "Zucchini", 18, 1.29);
+        addPredefinedItem("465768", "Bell Pepper", 22, 1.59);
+        addPredefinedItem("576879", "Mushroom", 15, 2.29);
+        addPredefinedItem("687980", "Spinach", 20, 1.99);
+        addPredefinedItem("798091", "Avocado", 12, 2.49);
+        addPredefinedItem("809102", "Lemon", 25, 0.79);
+            }
 
     private static void addPredefinedItem(String code, String name, int quantity, double price) {
         GroceryItem item = new GroceryItem(name, quantity, price);
