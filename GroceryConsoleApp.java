@@ -122,6 +122,8 @@ public class GroceryConsoleApp {
         boolean scanning = true;
         double sessionTotal = 0.0;
         int sessionCount = 0;
+        Map<String, Integer> sessionScans = new HashMap<>(); // track scanned items
+    
         while (scanning) {
             System.out.print("Scan or enter item code (or type 'done' to finish): ");
             String code = scanner.nextLine();
@@ -129,29 +131,62 @@ public class GroceryConsoleApp {
                 scanning = false;
                 break;
             }
+    
             GroceryItem item = codeToItem.get(code);
             if (item != null) {
-                item.setQuantity(item.getQuantity() + 1);
-                sessionTotal += item.getPrice();
-                sessionCount++;
-                System.out.println("Scanned: " + item.getName() + " | Price: " + item.getPrice());
+                // Ask for quantity
+                System.out.print("How many quantity: ");
+                int qty = Integer.parseInt(scanner.nextLine());
+    
+                // Update inventory (reduce stock if selling)
+                if (item.getQuantity() >= qty) {
+                    item.setQuantity(item.getQuantity() - qty);
+                } else {
+                    System.out.println("Not enough stock! Only " + item.getQuantity() + " available.");
+                    continue;
+                }
+    
+                double subtotal = item.getPrice() * qty;
+                sessionTotal += subtotal;
+                sessionCount += qty;
+    
+                sessionScans.put(item.getName(), sessionScans.getOrDefault(item.getName(), 0) + qty);
+    
+                System.out.printf("Scanned: %s | Qty: %d | Subtotal: %.2f\n",
+                                  item.getName(), qty, subtotal);
             } else {
                 System.out.println("Code not found. Adding new item.");
                 System.out.print("Enter item name: ");
                 String name = scanner.nextLine();
                 System.out.print("Enter price: ");
                 double price = Double.parseDouble(scanner.nextLine());
-                GroceryItem newItem = new GroceryItem(name, 1, price);
+                System.out.print("How many quantity: ");
+                int qty = Integer.parseInt(scanner.nextLine());
+    
+                GroceryItem newItem = new GroceryItem(name, qty, price);
                 inventory.add(newItem);
                 codeToItem.put(code, newItem);
-                sessionTotal += price;
-                sessionCount++;
-                System.out.println("Added and scanned: " + name + " | Price: " + price);
+    
+                double subtotal = price * qty;
+                sessionTotal += subtotal;
+                sessionCount += qty;
+                sessionScans.put(name, sessionScans.getOrDefault(name, 0) + qty);
+    
+                System.out.printf("Added and scanned: %s | Qty: %d | Subtotal: %.2f\n",
+                                  name, qty, subtotal);
             }
-            System.out.printf("Total items scanned this session: %d | Total sum: %.2f\n", sessionCount, sessionTotal);
+    
+            System.out.printf("Total items scanned this session: %d | Total sum: %.2f\n",
+                              sessionCount, sessionTotal);
         }
+    
         if (sessionCount > 0) {
-            System.out.printf("\nTotal to pay: %.2f\n", sessionTotal);
+            System.out.println("\n--- Session Summary ---");
+            for (Map.Entry<String, Integer> entry : sessionScans.entrySet()) {
+                System.out.printf("%s → %d pcs\n", entry.getKey(), entry.getValue());
+            }
+            System.out.printf("TOTAL to pay: %.2f\n", sessionTotal);
+    
             System.out.print("Enter buyer's money: ");
             double money = Double.parseDouble(scanner.nextLine());
             if (money >= sessionTotal) {
@@ -160,12 +195,13 @@ public class GroceryConsoleApp {
             } else {
                 System.out.printf("Insufficient funds! Buyer is short by: %.2f\n", sessionTotal - money);
             }
-            // Add to global scanned totals
+    
             scannedTotal += sessionTotal;
             scannedCount += sessionCount;
         }
     }
-
+    
+    
     private static void listItems() {
         System.out.println("\nCurrent Inventory:");
         System.out.printf("%-12s %-20s %5s %10s\n", "Barcode", "Name", "Qty", "Price");
