@@ -181,21 +181,30 @@ public class GroceryConsoleApp {
         }
     
         if (sessionCount > 0) {
-            System.out.println("\n--- Session Summary ---");
+            // Receipt border
+            String border = "****************************************";
+            System.out.println("\n" + border);
+            System.out.println("*           GROCERY STORE RECEIPT      *");
+            System.out.println(border);
             for (Map.Entry<String, Integer> entry : sessionScans.entrySet()) {
-                System.out.printf("%s → %d pcs\n", entry.getKey(), entry.getValue());
+                String line = String.format("* %-20s x%-3d               *", entry.getKey(), entry.getValue());
+                System.out.println(line);
             }
-            System.out.printf("TOTAL to pay: %.2f\n", sessionTotal);
-    
+            System.out.println(border);
+            System.out.printf("* TOTAL to pay: %10.2f         *\n", sessionTotal);
+            System.out.println(border);
+
             System.out.print("Enter buyer's money: ");
             double money = Double.parseDouble(scanner.nextLine());
             if (money >= sessionTotal) {
                 double change = money - sessionTotal;
-                System.out.printf("Change: %.2f\n", change);
+                System.out.printf("* Change: %16.2f         *\n", change);
+                System.out.println(border);
             } else {
-                System.out.printf("Insufficient funds! Buyer is short by: %.2f\n", sessionTotal - money);
+                System.out.printf("* Insufficient funds! Short: %.2f *\n", sessionTotal - money);
+                System.out.println(border);
             }
-    
+
             scannedTotal += sessionTotal;
             scannedCount += sessionCount;
         }
