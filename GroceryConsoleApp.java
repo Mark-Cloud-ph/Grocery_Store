@@ -167,9 +167,11 @@ public class GroceryConsoleApp {
 
     private static void listItems() {
         System.out.println("\nCurrent Inventory:");
-        System.out.printf("%-20s %5s %10s\n", "Name", "Qty", "Price");
-        for (GroceryItem item : inventory) {
-            System.out.println(item);
+        System.out.printf("%-12s %-20s %5s %10s\n", "Barcode", "Name", "Qty", "Price");
+        for (Map.Entry<String, GroceryItem> entry : codeToItem.entrySet()) {
+            String code = entry.getKey();
+            GroceryItem item = entry.getValue();
+            System.out.printf("%-12s %-20s %5d %10.2f\n", code, item.getName(), item.getQuantity(), item.getPrice());
         }
     }
 
